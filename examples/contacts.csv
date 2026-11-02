@@ -1,0 +1,8 @@
+client_id,name,email,city,country
+C001,Alice Martin,alice@example.com,Lyon,FR
+C002,Thomas Bernard,thomas@example.com,Paris,FR
+C003,Sarah Petit,sarah.example.com,Nantes,FR
+C002,Lucas Robert,lucas@example.com,Lille,FR
+C005,,emma@example.com,Bordeaux,FR
+C006,Hugo Moreau,,Marseille,FR
+C002,Chloe Dubois,chloe@example.com, Lyon,FR
