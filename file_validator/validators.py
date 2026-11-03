@@ -1,9 +1,10 @@
 import re
+from file_validator.models import ValidationIssue
 
 def validate_required_fields(
     rows: list[dict[str, str | None]], 
     required_fields: list[str]
-) -> list[dict[str, object]]:
+) -> list[ValidationIssue]:
     """
     Validate that the required fields are present in the data.
 
@@ -35,7 +36,7 @@ def validate_required_fields(
 def validate_unique_fields(
     rows: list[dict[str, str | None]], 
     unique_fields: list[str]
-) -> list[dict[str, object]]:
+) -> list[ValidationIssue]:
     """
     Validate that the specified fields are unique across the data.
 
@@ -74,7 +75,7 @@ def validate_unique_fields(
 def validate_email_fields(
     rows: list[dict[str, str | None]], 
     email_fields: list[str]
-) -> list[dict[str, object]]:
+) -> list[ValidationIssue]:
     """
     Validate that the specified fields contain valid email addresses.
 

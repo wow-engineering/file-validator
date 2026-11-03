@@ -1,0 +1,70 @@
+
+    <html>
+    <head>
+        <title>Validation Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+        <h1>Validation Report</h1>
+        <h3><i>Filename: contacts.csv</i></h3>
+        <h2>Summary</h2>
+        <h4><i>5 of 7 rows need correction</i></h4>
+        <ul>
+            <li>Total Rows Processed: 7</li>
+            <li>Total Issues Found: 5</li>
+            <li>Invalid Rows: 5</li>
+            <li>Valid Rows: 2</li>
+        </ul>
+    
+            <h2>Issues</h2>
+            <table>
+                <tr>
+                    <th>Row</th>
+                    <th>Field</th>
+                    <th>Code</th>
+                    <th>Message</th>
+                </tr>
+        
+                <tr>
+                    <td>4</td>
+                    <td>email</td>
+                    <td>invalid_email</td>
+                    <td>Invalid email format in field &#x27;email&#x27;: &#x27;sarah.example.com&#x27;</td>
+                </tr>
+            
+                <tr>
+                    <td>5</td>
+                    <td>client_id</td>
+                    <td>duplicate_value</td>
+                    <td>Duplicate value &#x27;C002&#x27; in field &#x27;client_id&#x27; (first seen at row 3).</td>
+                </tr>
+            
+                <tr>
+                    <td>6</td>
+                    <td>name</td>
+                    <td>required_field</td>
+                    <td>Required field &#x27;name&#x27; is missing.</td>
+                </tr>
+            
+                <tr>
+                    <td>7</td>
+                    <td>email</td>
+                    <td>required_field</td>
+                    <td>Required field &#x27;email&#x27; is missing.</td>
+                </tr>
+            
+                <tr>
+                    <td>8</td>
+                    <td>client_id</td>
+                    <td>duplicate_value</td>
+                    <td>Duplicate value &#x27;C002&#x27; in field &#x27;client_id&#x27; (first seen at row 3).</td>
+                </tr>
+            </table>
+    </body>
+    </html>
+    
