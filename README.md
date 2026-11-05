@@ -26,7 +26,7 @@ validating the contacts.
 - The header must include `client_id`, `name`, and `email`.
 - Each contact must have a value in those three columns.
 - Duplicate client IDs are flagged with the row number of the first occurrence.
-- If an email address is provided, the tool checks its format..
+- If an email address is provided, the tool checks its format.
 
 The sample files also include `city` and `country`.
 
