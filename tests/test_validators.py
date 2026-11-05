@@ -3,6 +3,7 @@ from file_validator.validators import (
     validate_email_fields,
     validate_required_fields,
     validate_unique_fields,
+    validate_header_fields
 )
 
 
@@ -44,6 +45,51 @@ class TestEmailFields(unittest.TestCase):
 
 
 class TestRequiredFields(unittest.TestCase):
+    def test_all_required_fields_present_in_header(self):
+        issues = validate_header_fields(
+            header=['client_id', 'name', 'email'],
+            required_fields=['client_id', 'name', 'email']
+        )
+        self.assertEqual(issues, [])
+
+    def test_missing_required_field_in_header(self):
+        issues = validate_header_fields(
+            header=['client_id', 'name'],
+            required_fields=['client_id', 'name', 'email']
+        )
+
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0]['field'], 'email')
+        self.assertEqual(issues[0]['code'], 'missing_header')
+        self.assertEqual(issues[0]['row'], 1)
+
+    def test_missing_required_fields_in_header(self):
+        issues = validate_header_fields(
+            header=['client_id'],
+            required_fields=['client_id', 'name', 'email']
+        )
+
+        self.assertEqual(len(issues), 2)
+
+        self.assertEqual(issues[0]['field'], 'name')
+        self.assertEqual(issues[0]['code'], 'missing_header')
+        self.assertEqual(issues[0]['row'], 1)
+
+        self.assertEqual(issues[1]['field'], 'email')
+        self.assertEqual(issues[1]['code'], 'missing_header')
+        self.assertEqual(issues[1]['row'], 1)
+
+    def test_empty_header(self):
+        issues = validate_header_fields(
+            header=None,
+            required_fields=['client_id', 'name', 'email']
+        )
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0]['field'], '')
+        self.assertEqual(issues[0]['code'], 'missing_header')
+        self.assertEqual(issues[0]['row'], 1)
+
+
     def test_valid_required_fields(self):
         issues = validate_required_fields(
             rows=[{'client_id': 'C001', 'name': 'Alice', 'email': 'alice@example.com'}],
@@ -94,6 +140,7 @@ class TestRequiredFields(unittest.TestCase):
                 self.assertEqual(issues[0]['field'], 'name')
                 self.assertEqual(issues[0]['code'], 'required_field')
                 self.assertEqual(issues[0]['row'], 2)
+
 
 class TestUniqueFields(unittest.TestCase):
     def test_valid_unique_fields(self):

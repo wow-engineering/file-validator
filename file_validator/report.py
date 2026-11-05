@@ -17,7 +17,7 @@ def build_summary(
     }
 
 def render_html_report(
-    summary: dict[str, int],
+    summary: dict[str, int] | None,
     issues: list[ValidationIssue],
     csv_filename: str = "data.csv"
 ) -> str:
@@ -37,52 +37,68 @@ def render_html_report(
             <h1>Validation Report</h1>
             <h3><i>Filename: {html.escape(csv_filename, quote=True)}</i></h3>
     """
-    if summary['total_rows'] > 0:
-        html_content += f"""
-            <h2>Summary</h2>
-            <h4><i>{summary['invalid_rows']} of {summary['total_rows']} rows need correction</i></h4>
-            <ul>
-                <li>Total Rows Processed: {summary['total_rows']}</li>
-                <li>Total Issues Found: {summary['total_issues']}</li>
-                <li>Invalid Rows: {summary['invalid_rows']}</li>
-                <li>Valid Rows: {summary['valid_rows']}</li>
-            </ul>
-        """
-
-        if issues:
+    if summary:
+        if summary['total_rows'] > 0:
             html_content += """
-                <h2>Issues</h2>
-                <table>
-                    <tr>
-                        <th>Row</th>
-                        <th>Field</th>
-                        <th>Code</th>
-                        <th>Message</th>
-                    </tr>
+                <h2>Summary</h2>
             """
 
-            sorted_issues = sorted(
-                issues, 
-                key=lambda x: x['row'],
-            )
+            if summary['invalid_rows'] > 0:
+                if summary['total_rows'] == 1:
+                    summary_message = "The only row needs correction"
+                else:
+                    summary_message = (
+                        f"{summary['invalid_rows']} of {summary['total_rows']} "
+                        f"rows need correction"
+                    )
 
-            for issue in sorted_issues:
-                html_content += f"""
-                    <tr>
-                        <td>{issue['row']}</td>
-                        <td>{html.escape(issue['field'], quote=True)}</td>
-                        <td>{html.escape(issue['code'], quote=True)}</td>
-                        <td>{html.escape(issue['message'], quote=True)}</td>
-                    </tr>
-                """
+            else:
+                if summary['valid_rows'] > 1:
+                    summary_message = f"All {summary['total_rows']} rows are valid"
+                else:
+                    summary_message = f"The only row is valid"
 
-            html_content += "</table>"
+            html_content += f"""
+                <h4><i>{summary_message}</i></h4>
+                <ul>
+                    <li>Total Rows Processed: {summary['total_rows']}</li>
+                    <li>Total Issues Found: {summary['total_issues']}</li>
+                    <li>Invalid Rows: {summary['invalid_rows']}</li>
+                    <li>Valid Rows: {summary['valid_rows']}</li>
+                </ul>
+            """
 
         else:
-            html_content += "<p>No issues found.</p>"
+            html_content += "<p>No rows were processed.</p>"
 
-    else:
-        html_content += "<p>No rows were processed.</p>"
+    if issues:
+        html_content += """
+            <h2>Issues</h2>
+            <table>
+                <tr>
+                    <th>Row</th>
+                    <th>Field</th>
+                    <th>Code</th>
+                    <th>Message</th>
+                </tr>
+        """
+
+        sorted_issues = sorted(
+            issues, 
+            key=lambda x: x['row'],
+        )
+
+        for issue in sorted_issues:
+            html_content += f"""
+                <tr>
+                    <td>{issue['row']}</td>
+                    <td>{html.escape(issue['field'], quote=True)}</td>
+                    <td>{html.escape(issue['code'], quote=True)}</td>
+                    <td>{html.escape(issue['message'], quote=True)}</td>
+                </tr>
+            """
+
+        html_content += "</table>"
 
     html_content += """
     </body>

@@ -1,6 +1,42 @@
 import re
 from file_validator.models import ValidationIssue
 
+def validate_header_fields(
+    header: list[str] | None, 
+    required_fields: list[str]
+) -> list[ValidationIssue]:
+    """
+    Validate that the required fields are present in the header.
+
+    Args:
+        header (list of str): The header fields from the CSV file.
+        required_fields (list of str): The list of required field names.
+
+    Returns:
+        list of ValidationIssue: The validation issues.
+    """
+    issues: list[ValidationIssue] = []
+    if header is None:
+        issues.append({
+            'row': 1,
+            'field': '',
+            'code': 'missing_header',
+            'message': "The CSV file is empty or missing a header row."
+        })
+        return issues
+    
+    missing_fields = [field for field in required_fields if field not in header]
+
+    if missing_fields:
+        for missing_field in missing_fields:
+            issues.append({
+                'row': 1,
+                'field': missing_field,
+                'code': 'missing_header',
+                'message': f"Required header field '{missing_field}' is missing."
+            })
+    return issues
+
 def validate_required_fields(
     rows: list[dict[str, str | None]], 
     required_fields: list[str]
@@ -15,7 +51,7 @@ def validate_required_fields(
     Returns:
         list of dict: The validation issues.
     """
-    issues = []
+    issues: list[ValidationIssue] = []
     for i, record in enumerate(rows, start=2):
         missing_fields = [
             field 
@@ -47,7 +83,7 @@ def validate_unique_fields(
     Returns:
         list of dict: The validation issues.
     """
-    issues = []
+    issues: list[ValidationIssue] = []
     seen_values = {field: {} for field in unique_fields}
 
     for i, record in enumerate(rows, start=2):
@@ -86,7 +122,7 @@ def validate_email_fields(
     Returns:
         list of dict: The validation issues.
     """
-    issues = []
+    issues: list[ValidationIssue] = []
     email_pattern = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 
     for i, record in enumerate(rows, start=2):
